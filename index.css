@@ -28,11 +28,21 @@ body {
   /* Optional: align image under the name */
   .profile-wrapper {
     display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+    flex-direction: column;  /* stack */
+    justify-content: center; /* vertical center */
+    align-items: center;     /* horizontal center */
+    height: 25vh;
+    text-align: center;
   }
-
+  
   .profile-img {
     width: 200px;
+    border-radius: 50%;
+  }
+  
+  h1 {
+    margin-top: 15px;
+  }
+  .container {
+    margin-top: 250px;
   }
