@@ -1,6 +1,6 @@
 // ── Fade scroll logic ────────────────────────────────────
 const sections = Array.from(document.querySelectorAll('.section'));
-const links = document.querySelectorAll('.nav-link');
+const homeNavBtns = document.querySelectorAll('.home-nav-btn');
 let current = 0;
 let isAnimating = false;
 
@@ -9,13 +9,13 @@ function goTo(index) {
   isAnimating = true;
 
   sections[current].classList.remove('active');
-  links.forEach(l => l.classList.remove('active'));
+  homeNavBtns.forEach(b => b.classList.remove('active-btn'));
 
   current = index;
 
   sections[current].classList.add('active');
-  const activeLink = document.querySelector(`.nav-link[href="#${sections[current].id}"]`);
-  if (activeLink) activeLink.classList.add('active');
+  const activeBtn = document.querySelector(`.home-nav-btn[href="#${sections[current].id}"]`);
+  if (activeBtn) activeBtn.classList.add('active-btn');
 
   setTimeout(() => { isAnimating = false; }, 900);
 }
@@ -39,22 +39,15 @@ window.addEventListener('touchend', (e) => {
   }
 });
 
-// ── Nav links ────────────────────────────────────────────
-const hamburger = document.getElementById('hamburger');
-const navLinksEl = document.querySelector('.nav-links');
-
-links.forEach((link) => {
-  link.addEventListener('click', (e) => {
+// ── Home nav buttons ─────────────────────────────────────
+homeNavBtns.forEach((btn) => {
+  btn.addEventListener('click', (e) => {
     e.preventDefault();
-    const targetId = link.getAttribute('href').replace('#', '');
+    const targetId = btn.getAttribute('href').replace('#', '');
     const index = sections.findIndex(s => s.id === targetId);
     if (index !== -1) goTo(index);
-    navLinksEl.classList.remove('open');
   });
 });
-
-// ── Hamburger ────────────────────────────────────────────
-hamburger.addEventListener('click', () => navLinksEl.classList.toggle('open'));
 
 // ── Cert modal ───────────────────────────────────────────
 const overlay = document.getElementById('modal-overlay');
@@ -100,7 +93,7 @@ window.addEventListener('load', () => {
   });
 
   anime({
-    targets: '.home-greeting, .home-title, .btn-primary',
+    targets: '.home-greeting, .home-title, .home-img-wrapper, .home-nav',
     opacity: [0, 1],
     translateY: [20, 0],
     delay: anime.stagger(120, { start: 300 }),
