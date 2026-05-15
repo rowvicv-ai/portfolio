@@ -31,18 +31,27 @@ window.addEventListener('wheel', (e) => {
 // ── Touch swipe ──────────────────────────────────────────
 let touchStartY = 0;
 let touchStartX = 0;
+let touchMoved = false;
 
 window.addEventListener('touchstart', (e) => {
   touchStartY = e.touches[0].clientY;
   touchStartX = e.touches[0].clientX;
+  touchMoved = false;
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+  touchMoved = true;
 }, { passive: true });
 
 window.addEventListener('touchend', (e) => {
+  // Must have actually moved finger
+  if (!touchMoved) return;
+
   const diffY = touchStartY - e.changedTouches[0].clientY;
   const diffX = Math.abs(touchStartX - e.changedTouches[0].clientX);
 
-  // Only trigger if swipe is mostly vertical and long enough
-  if (Math.abs(diffY) > 80 && diffX < 50) {
+  // Require 120px vertical swipe, mostly vertical direction
+  if (Math.abs(diffY) > 120 && diffX < Math.abs(diffY) * 0.5) {
     if (diffY > 0) goTo(current + 1);
     else goTo(current - 1);
   }
