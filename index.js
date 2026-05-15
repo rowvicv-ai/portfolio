@@ -3,10 +3,17 @@ const sections = Array.from(document.querySelectorAll('.section'));
 const homeNavBtns = document.querySelectorAll('.home-nav-btn');
 let current = 0;
 let isAnimating = false;
+let lastNavTime = 0;
 
 function goTo(index) {
-  if (index < 0 || index >= sections.length || isAnimating) return;
+  const now = Date.now();
+  // Block if animating OR if last nav was less than 1 second ago
+  if (index < 0 || index >= sections.length) return;
+  if (isAnimating) return;
+  if (now - lastNavTime < 1000) return;
+
   isAnimating = true;
+  lastNavTime = now;
 
   sections[current].classList.remove('active');
   homeNavBtns.forEach(b => b.classList.remove('active-btn'));
@@ -17,13 +24,17 @@ function goTo(index) {
   const activeBtn = document.querySelector(`.home-nav-btn[href="#${sections[current].id}"]`);
   if (activeBtn) activeBtn.classList.add('active-btn');
 
-  setTimeout(() => { isAnimating = false; }, 900);
+  setTimeout(() => { isAnimating = false; }, 1000);
 }
 
 goTo(0);
 
 // ── Mouse wheel ──────────────────────────────────────────
+let lastWheelTime = 0;
 window.addEventListener('wheel', (e) => {
+  const now = Date.now();
+  if (now - lastWheelTime < 1000) return;
+  lastWheelTime = now;
   if (e.deltaY > 0) goTo(current + 1);
   else goTo(current - 1);
 }, { passive: true });
@@ -32,11 +43,13 @@ window.addEventListener('wheel', (e) => {
 let touchStartY = 0;
 let touchStartX = 0;
 let touchMoved = false;
+let touchLocked = false;
 
 window.addEventListener('touchstart', (e) => {
   touchStartY = e.touches[0].clientY;
   touchStartX = e.touches[0].clientX;
   touchMoved = false;
+  touchLocked = false;
 }, { passive: true });
 
 window.addEventListener('touchmove', (e) => {
@@ -44,14 +57,14 @@ window.addEventListener('touchmove', (e) => {
 }, { passive: true });
 
 window.addEventListener('touchend', (e) => {
-  // Must have actually moved finger
-  if (!touchMoved) return;
+  if (!touchMoved || touchLocked) return;
 
   const diffY = touchStartY - e.changedTouches[0].clientY;
   const diffX = Math.abs(touchStartX - e.changedTouches[0].clientX);
 
-  // Require 120px vertical swipe, mostly vertical direction
-  if (Math.abs(diffY) > 120 && diffX < Math.abs(diffY) * 0.5) {
+  // Must be a strong intentional vertical swipe
+  if (Math.abs(diffY) > 100 && diffX < Math.abs(diffY) * 0.4) {
+    touchLocked = true;
     if (diffY > 0) goTo(current + 1);
     else goTo(current - 1);
   }
@@ -65,6 +78,11 @@ homeNavBtns.forEach((btn) => {
     const index = sections.findIndex(s => s.id === targetId);
     if (index !== -1) goTo(index);
   });
+});
+
+// ── Back button ──────────────────────────────────────────
+document.querySelectorAll('.back-btn').forEach(btn => {
+  btn.addEventListener('click', () => goTo(0));
 });
 
 // ── Cert modal ───────────────────────────────────────────
