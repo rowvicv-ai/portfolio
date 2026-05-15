@@ -30,14 +30,23 @@ window.addEventListener('wheel', (e) => {
 
 // ── Touch swipe ──────────────────────────────────────────
 let touchStartY = 0;
-window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; });
+let touchStartX = 0;
+
+window.addEventListener('touchstart', (e) => {
+  touchStartY = e.touches[0].clientY;
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+
 window.addEventListener('touchend', (e) => {
-  const diff = touchStartY - e.changedTouches[0].clientY;
-  if (Math.abs(diff) > 40) {
-    if (diff > 0) goTo(current + 1);
+  const diffY = touchStartY - e.changedTouches[0].clientY;
+  const diffX = Math.abs(touchStartX - e.changedTouches[0].clientX);
+
+  // Only trigger if swipe is mostly vertical and long enough
+  if (Math.abs(diffY) > 80 && diffX < 50) {
+    if (diffY > 0) goTo(current + 1);
     else goTo(current - 1);
   }
-});
+}, { passive: true });
 
 // ── Home nav buttons ─────────────────────────────────────
 homeNavBtns.forEach((btn) => {
