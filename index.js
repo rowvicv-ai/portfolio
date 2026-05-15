@@ -1,4 +1,4 @@
-// ── Fade scroll logic ────────────────────────────────────
+// ── Fade logic ───────────────────────────────────────────
 const sections = Array.from(document.querySelectorAll('.section'));
 const homeNavBtns = document.querySelectorAll('.home-nav-btn');
 let current = 0;
@@ -7,7 +7,6 @@ let lastNavTime = 0;
 
 function goTo(index) {
   const now = Date.now();
-  // Block if animating OR if last nav was less than 1 second ago
   if (index < 0 || index >= sections.length) return;
   if (isAnimating) return;
   if (now - lastNavTime < 1000) return;
@@ -29,7 +28,7 @@ function goTo(index) {
 
 goTo(0);
 
-// ── Mouse wheel ──────────────────────────────────────────
+// ── Mouse wheel (desktop only) ───────────────────────────
 let lastWheelTime = 0;
 window.addEventListener('wheel', (e) => {
   const now = Date.now();
@@ -37,37 +36,6 @@ window.addEventListener('wheel', (e) => {
   lastWheelTime = now;
   if (e.deltaY > 0) goTo(current + 1);
   else goTo(current - 1);
-}, { passive: true });
-
-// ── Touch swipe ──────────────────────────────────────────
-let touchStartY = 0;
-let touchStartX = 0;
-let touchMoved = false;
-let touchLocked = false;
-
-window.addEventListener('touchstart', (e) => {
-  touchStartY = e.touches[0].clientY;
-  touchStartX = e.touches[0].clientX;
-  touchMoved = false;
-  touchLocked = false;
-}, { passive: true });
-
-window.addEventListener('touchmove', (e) => {
-  touchMoved = true;
-}, { passive: true });
-
-window.addEventListener('touchend', (e) => {
-  if (!touchMoved || touchLocked) return;
-
-  const diffY = touchStartY - e.changedTouches[0].clientY;
-  const diffX = Math.abs(touchStartX - e.changedTouches[0].clientX);
-
-  // Must be a strong intentional vertical swipe
-  if (Math.abs(diffY) > 100 && diffX < Math.abs(diffY) * 0.4) {
-    touchLocked = true;
-    if (diffY > 0) goTo(current + 1);
-    else goTo(current - 1);
-  }
 }, { passive: true });
 
 // ── Home nav buttons ─────────────────────────────────────
@@ -80,7 +48,7 @@ homeNavBtns.forEach((btn) => {
   });
 });
 
-// ── Back button ──────────────────────────────────────────
+// ── Back buttons ─────────────────────────────────────────
 document.querySelectorAll('.back-btn').forEach(btn => {
   btn.addEventListener('click', () => goTo(0));
 });
