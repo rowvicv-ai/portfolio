@@ -1,43 +1,80 @@
+const sections = document.querySelectorAll('.section');
 const navButtons = document.querySelectorAll('.home-nav-btn');
 
+let current = 0;
+let isAnimating = false;
+
+function goTo(index) {
+
+  if (index < 0 || index >= sections.length) return;
+
+  if (isAnimating || current === index) return;
+
+  isAnimating = true;
+
+  sections[current].classList.remove('active');
+
+  navButtons.forEach(btn => {
+    btn.classList.remove('active-btn');
+  });
+
+  current = index;
+
+  sections[current].classList.add('active');
+
+  const activeBtn =
+    document.querySelector(
+      `.home-nav-btn[href="#${sections[current].id}"]`
+    );
+
+  if (activeBtn) {
+    activeBtn.classList.add('active-btn');
+  }
+
+  sections[current].scrollTop = 0;
+
+  setTimeout(() => {
+    isAnimating = false;
+  }, 650);
+}
+
+/* INITIAL */
+
+sections[0].classList.add('active');
+
+/* NAV BUTTONS */
+
 navButtons.forEach((btn) => {
+
   btn.addEventListener('click', (e) => {
+
     e.preventDefault();
 
-    const targetId = btn.getAttribute('href');
-    const targetSection = document.querySelector(targetId);
+    const target =
+      btn.getAttribute('href').replace('#', '');
 
-    if (targetSection) {
-      targetSection.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }
+    const index =
+      [...sections].findIndex(
+        section => section.id === target
+      );
 
-    navButtons.forEach(b => b.classList.remove('active-btn'));
-    btn.classList.add('active-btn');
+    goTo(index);
+
   });
+
 });
 
-// BACK BUTTONS
+/* BACK BUTTONS */
 
 document.querySelectorAll('.back-btn').forEach(btn => {
+
   btn.addEventListener('click', () => {
-
-    document.querySelector('#home').scrollIntoView({
-      behavior: 'smooth'
-    });
-
-    navButtons.forEach(b => b.classList.remove('active-btn'));
-
-    const homeBtn = document.querySelector('[href="#home"]');
-
-    if (homeBtn) {
-      homeBtn.classList.add('active-btn');
-    }
+    goTo(0);
   });
+
 });
 
-// CERT MODAL
+/* MODAL */
 
 const overlay = document.getElementById('modal-overlay');
 const modalImg = document.getElementById('modal-img');
@@ -59,12 +96,14 @@ function closeModal() {
 }
 
 document.addEventListener('keydown', (e) => {
+
   if (e.key === 'Escape') {
     closeModal();
   }
+
 });
 
-// ANIMATIONS
+/* INTRO ANIMATION */
 
 window.addEventListener('load', () => {
 
@@ -77,10 +116,15 @@ window.addEventListener('load', () => {
   });
 
   anime({
-    targets: '.home-greeting, .home-title, .home-img-wrapper, .home-nav',
+    targets:
+      '.home-greeting, .home-title, .home-img-wrapper, .home-nav',
+
     opacity: [0, 1],
     translateY: [20, 0],
-    delay: anime.stagger(120, { start: 300 }),
+
+    delay:
+      anime.stagger(120, { start: 300 }),
+
     duration: 700,
     easing: 'easeOutExpo',
   });
