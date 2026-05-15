@@ -4,17 +4,17 @@ const navButtons = document.querySelectorAll('.home-nav-btn');
 let current = 0;
 let isAnimating = false;
 
-function goTo(index) {
+function goTo(index){
 
-  if (index < 0 || index >= sections.length) return;
+  if(index < 0 || index >= sections.length) return;
 
-  if (isAnimating || current === index) return;
+  if(isAnimating || current === index) return;
 
   isAnimating = true;
 
   sections[current].classList.remove('active');
 
-  navButtons.forEach(btn => {
+  navButtons.forEach(btn=>{
     btn.classList.remove('active-btn');
   });
 
@@ -27,31 +27,32 @@ function goTo(index) {
       `.home-nav-btn[href="#${sections[current].id}"]`
     );
 
-  if (activeBtn) {
+  if(activeBtn){
     activeBtn.classList.add('active-btn');
   }
 
   sections[current].scrollTop = 0;
 
-  setTimeout(() => {
+  setTimeout(()=>{
     isAnimating = false;
-  }, 650);
+  },600);
+
 }
 
 /* INITIAL */
 
 sections[0].classList.add('active');
 
-/* NAV BUTTONS */
+/* NAVIGATION */
 
-navButtons.forEach((btn) => {
+navButtons.forEach(btn=>{
 
-  btn.addEventListener('click', (e) => {
+  btn.addEventListener('click',(e)=>{
 
     e.preventDefault();
 
     const target =
-      btn.getAttribute('href').replace('#', '');
+      btn.getAttribute('href').replace('#','');
 
     const index =
       [...sections].findIndex(
@@ -64,69 +65,39 @@ navButtons.forEach((btn) => {
 
 });
 
-/* BACK BUTTONS */
+/* BACK BUTTON */
 
-document.querySelectorAll('.back-btn').forEach(btn => {
+document.querySelectorAll('.back-btn').forEach(btn=>{
 
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click',()=>{
     goTo(0);
   });
 
 });
 
-/* MODAL */
+/* ANIMATION */
 
-const overlay = document.getElementById('modal-overlay');
-const modalImg = document.getElementById('modal-img');
-
-function openCert(imgId) {
-
-  const img = document.getElementById(imgId);
-
-  if (!img) return;
-
-  modalImg.src = img.src;
-  modalImg.alt = img.alt;
-
-  overlay.classList.add('open');
-}
-
-function closeModal() {
-  overlay.classList.remove('open');
-}
-
-document.addEventListener('keydown', (e) => {
-
-  if (e.key === 'Escape') {
-    closeModal();
-  }
-
-});
-
-/* INTRO ANIMATION */
-
-window.addEventListener('load', () => {
+window.addEventListener('load',()=>{
 
   anime({
-    targets: '.home-name',
-    opacity: [0, 1],
-    translateY: [30, 0],
-    duration: 900,
-    easing: 'easeOutExpo',
+    targets:'.home-name',
+    opacity:[0,1],
+    translateY:[30,0],
+    duration:1000,
+    easing:'easeOutExpo'
   });
 
   anime({
     targets:
-      '.home-greeting, .home-title, .home-img-wrapper, .home-nav',
+    '.home-greeting, .home-title, .home-img-wrapper, .home-nav',
 
-    opacity: [0, 1],
-    translateY: [20, 0],
+    opacity:[0,1],
+    translateY:[20,0],
 
-    delay:
-      anime.stagger(120, { start: 300 }),
+    delay:anime.stagger(120,{start:300}),
 
-    duration: 700,
-    easing: 'easeOutExpo',
+    duration:700,
+    easing:'easeOutExpo'
   });
 
 });
