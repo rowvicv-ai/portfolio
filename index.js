@@ -1,77 +1,81 @@
-// ── Hamburger menu ──────────────────────────────────────
+// ── Fade scroll logic ────────────────────────────────────
+const sections = Array.from(document.querySelectorAll('.section'));
+const links = document.querySelectorAll('.nav-link');
+let current = 0;
+let isAnimating = false;
+
+function goTo(index) {
+  if (index < 0 || index >= sections.length || isAnimating) return;
+  isAnimating = true;
+
+  sections[current].classList.remove('active');
+  links.forEach(l => l.classList.remove('active'));
+
+  current = index;
+
+  sections[current].classList.add('active');
+  const activeLink = document.querySelector(`.nav-link[href="#${sections[current].id}"]`);
+  if (activeLink) activeLink.classList.add('active');
+
+  setTimeout(() => { isAnimating = false; }, 900);
+}
+
+goTo(0);
+
+// ── Mouse wheel ──────────────────────────────────────────
+window.addEventListener('wheel', (e) => {
+  if (e.deltaY > 0) goTo(current + 1);
+  else goTo(current - 1);
+}, { passive: true });
+
+// ── Touch swipe ──────────────────────────────────────────
+let touchStartY = 0;
+window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; });
+window.addEventListener('touchend', (e) => {
+  const diff = touchStartY - e.changedTouches[0].clientY;
+  if (Math.abs(diff) > 40) {
+    if (diff > 0) goTo(current + 1);
+    else goTo(current - 1);
+  }
+});
+
+// ── Nav links ────────────────────────────────────────────
 const hamburger = document.getElementById('hamburger');
-const navLinks  = document.querySelector('.nav-links');
- 
-hamburger.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-});
- 
-// Close menu on link click
-document.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', () => navLinks.classList.remove('open'));
-});
- 
-// ── Active nav on scroll ─────────────────────────────────
-const sections = document.querySelectorAll('.section');
-const links    = document.querySelectorAll('.nav-link');
- 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      links.forEach(l => l.classList.remove('active'));
-      const id = entry.target.getAttribute('id');
-      const active = document.querySelector(`.nav-link[href="#${id}"]`);
-      if (active) active.classList.add('active');
-    }
+const navLinksEl = document.querySelector('.nav-links');
+
+links.forEach((link) => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetId = link.getAttribute('href').replace('#', '');
+    const index = sections.findIndex(s => s.id === targetId);
+    if (index !== -1) goTo(index);
+    navLinksEl.classList.remove('open');
   });
-}, { threshold: 0.4 });
- 
-sections.forEach(s => observer.observe(s));
- 
-// ── Animate tech cards on scroll ────────────────────────
-const techCards = document.querySelectorAll('.tech-card');
-const cardObserver = new IntersectionObserver(entries => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }, i * 60);
-      cardObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1 });
- 
-techCards.forEach(card => {
-  card.style.opacity = '0';
-  card.style.transform = 'translateY(20px)';
-  card.style.transition = 'opacity 0.4s ease, transform 0.4s ease, border-color 0.35s, background 0.35s, box-shadow 0.35s, color 0.35s';
-  cardObserver.observe(card);
 });
- 
+
+// ── Hamburger ────────────────────────────────────────────
+hamburger.addEventListener('click', () => navLinksEl.classList.toggle('open'));
+
 // ── Cert modal ───────────────────────────────────────────
-const overlay  = document.getElementById('modal-overlay');
+const overlay = document.getElementById('modal-overlay');
 const modalImg = document.getElementById('modal-img');
- 
+
 function openCert(imgId) {
   const img = document.getElementById(imgId);
   if (!img) return;
   modalImg.src = img.src;
   modalImg.alt = img.alt;
   overlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
 }
- 
+
 function closeModal() {
   overlay.classList.remove('open');
-  document.body.style.overflow = '';
 }
- 
-// Close on Escape
-document.addEventListener('keydown', e => {
+
+document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeModal();
 });
- 
+
 // ── SweetAlert2 welcome toast ────────────────────────────
 window.addEventListener('load', () => {
   Swal.fire({
@@ -86,8 +90,7 @@ window.addEventListener('load', () => {
     color: '#f0ede8',
     iconColor: '#e8c97a',
   });
- 
-  // Anime.js: stagger name letters on load
+
   anime({
     targets: '.home-name',
     opacity: [0, 1],
@@ -95,7 +98,7 @@ window.addEventListener('load', () => {
     duration: 900,
     easing: 'easeOutExpo',
   });
- 
+
   anime({
     targets: '.home-greeting, .home-title, .btn-primary',
     opacity: [0, 1],

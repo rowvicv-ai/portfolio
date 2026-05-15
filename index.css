@@ -7,7 +7,6 @@
   --surface: #1a1a2e;
   --border: rgba(255,255,255,0.07);
   --accent: #e8c97a;
-  --accent2: #7a9ee8;
   --text: #f0ede8;
   --muted: #8a8798;
   --font-display: 'DM Serif Display', Georgia, serif;
@@ -31,19 +30,7 @@ body {
   line-height: 1.7;
 }
 
-/* ===========================
-   SNAP SCROLL CONTAINER
-=========================== */
-.scroll-container {
-  height: 100vh;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-}
-
-/* ===========================
-   NAVBAR
-=========================== */
+/* NAVBAR */
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -106,18 +93,29 @@ body {
   display: block;
   width: 24px; height: 2px;
   background: var(--text);
-  transition: var(--transition);
 }
 
-/* ===========================
-   SECTION BASE
-=========================== */
+/* FADE CONTAINER */
+.scroll-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* SECTIONS */
 .section {
-  height: 100vh;
-  scroll-snap-align: start;
-  overflow-y: auto;
+  position: absolute;
+  inset: 0;
   padding: calc(var(--nav-h) + 4rem) clamp(1.5rem, 8vw, 8rem) 5rem;
-  position: relative;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.section.active {
+  opacity: 1;
+  pointer-events: all;
 }
 
 .section-label {
@@ -144,16 +142,13 @@ body {
   max-width: 540px;
 }
 
-/* ===========================
-   HOME
-=========================== */
+/* HOME */
 .home-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  overflow: hidden;
   background: var(--bg);
 }
 
@@ -190,8 +185,8 @@ body {
 
 .home-name {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 8vw, 6rem);
-  line-height: 1;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  line-height: 1.1;
   color: var(--text);
   margin: 0.25rem 0;
 }
@@ -248,22 +243,7 @@ body {
   box-shadow: 0 8px 24px rgba(232,201,122,0.3);
 }
 
-.scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  font-size: 0.75rem;
-  color: var(--muted);
-  letter-spacing: 0.15em;
-  animation: fadeUpDown 2s ease-in-out infinite;
-}
-@keyframes fadeUpDown {
-  0%, 100% { transform: translateY(0); opacity: 0.5; }
-  50%       { transform: translateY(6px); opacity: 1; }
-}
-
-/* ===========================
-   ABOUT
-=========================== */
+/* ABOUT */
 .about-section { background: var(--bg2); }
 
 .about-grid {
@@ -292,12 +272,14 @@ body {
 }
 
 .about-stat { display: flex; flex-direction: column; gap: 0.2rem; }
+
 .stat-num {
   font-family: var(--font-display);
   font-size: 2.5rem;
   color: var(--accent);
   line-height: 1;
 }
+
 .stat-label {
   font-size: 0.8rem;
   color: var(--muted);
@@ -305,9 +287,7 @@ body {
   letter-spacing: 0.1em;
 }
 
-/* ===========================
-   TECH STACK
-=========================== */
+/* TECH STACK */
 .techstack-section { background: var(--bg); }
 
 .tech-grid {
@@ -342,9 +322,7 @@ body {
 
 .tech-logo { width: 48px; height: 48px; object-fit: contain; }
 
-/* ===========================
-   CERTIFICATIONS
-=========================== */
+/* CERTIFICATIONS */
 .certs-section { background: var(--bg2); }
 
 .certs-grid {
@@ -394,7 +372,6 @@ body {
   transition: opacity var(--transition);
   font-size: 1.1rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
   color: var(--accent);
 }
 .cert-card:hover .cert-overlay { opacity: 1; }
@@ -413,9 +390,7 @@ body {
 .cert-label:hover { color: var(--accent); }
 .cert-issuer { font-size: 0.8rem; color: var(--muted); font-weight: 400; }
 
-/* ===========================
-   MODAL
-=========================== */
+/* MODAL */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -464,39 +439,26 @@ body {
   border-radius: 8px;
 }
 
-/* ===========================
-   FOOTER
-=========================== */
+/* FOOTER */
 .footer {
-  height: 100vh;
-  scroll-snap-align: start;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  text-align: center;
+  padding: 1rem;
   font-size: 0.8rem;
   color: var(--muted);
   border-top: 1px solid var(--border);
-  background: var(--bg);
+  background: rgba(12,12,20,0.85);
+  backdrop-filter: blur(14px);
+  z-index: 500;
 }
 
-/* ===========================
-   TABLET (321px–768px)
-=========================== */
+/* TABLET */
 @media (max-width: 768px) {
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  .about-card {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-  .tech-grid {
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  }
-  .certs-grid {
-    grid-template-columns: 1fr;
-  }
+  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .about-card { flex-direction: row; justify-content: space-around; }
+  .tech-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .certs-grid { grid-template-columns: 1fr; }
   .nav-links {
     position: fixed;
     top: var(--nav-h);
@@ -512,24 +474,16 @@ body {
   }
   .nav-links.open { max-height: 300px; }
   .nav-links li { width: 100%; }
-  .nav-link {
-    display: block;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid var(--border);
-  }
+  .nav-link { display: block; padding: 1rem 2rem; border-bottom: 1px solid var(--border); }
   .hamburger { display: flex; }
 }
 
-/* ===========================
-   MOBILE (≤320px)
-=========================== */
+/* MOBILE */
 @media (max-width: 320px) {
-  .section {
-    padding: calc(var(--nav-h) + 2rem) 1.2rem 3rem;
-  }
-  .home-name { font-size: 2.2rem; }
+  .section { padding: calc(var(--nav-h) + 2rem) 1.2rem 3rem; }
+  .home-name { font-size: 1.8rem; }
   .home-img, .home-img-wrapper { width: 140px; height: 140px; }
   .tech-grid { grid-template-columns: repeat(2, 1fr); }
   .about-card { flex-direction: column; }
-  .section-title { font-size: 1.8rem; }
+  .section-title { font-size: 1.6rem; }
 }
