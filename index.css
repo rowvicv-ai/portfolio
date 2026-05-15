@@ -342,6 +342,65 @@ body {
   font-size: 0.85rem;
 }
 
+/* CONTACT */
+
+.contact-section {
+  background: var(--bg);
+}
+
+.contact-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.contact-btn img {
+  width: 28px;
+  height: 28px;
+}
+
+.contact-btn.linkedin {
+  color: #0a66c2;
+  border-color: #0a66c2;
+}
+.contact-btn.linkedin:hover {
+  background: #0a66c2;
+  color: #fff;
+}
+
+.contact-btn.github {
+  color: var(--text);
+  border-color: var(--border);
+}
+.contact-btn.github:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.contact-btn.email {
+  color: var(--accent);
+  border-color: rgba(232,201,122,0.4);
+}
+.contact-btn.email:hover {
+  background: var(--accent);
+  color: #0c0c14;
+}
+
 /* MODAL */
 
 .modal-overlay {
@@ -438,6 +497,14 @@ body {
 
   .home-bg-blob {
     display: none;
+  }
+
+  .contact-links {
+    flex-direction: column;
+  }
+
+  .contact-btn {
+    justify-content: center;
   }
 
 }
