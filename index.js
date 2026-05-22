@@ -4,8 +4,6 @@ const navButtons = document.querySelectorAll('.home-nav-btn');
 let current = 0;
 let isAnimating = false;
 
-/* SECTION NAVIGATION */
-
 function goTo(index) {
 
   if (index < 0 || index >= sections.length) return;
@@ -14,23 +12,15 @@ function goTo(index) {
 
   isAnimating = true;
 
-  /* REMOVE CURRENT */
-
   sections[current].classList.remove('active');
 
   navButtons.forEach(btn => {
     btn.classList.remove('active-btn');
   });
 
-  /* CHANGE SECTION */
-
   current = index;
 
-  /* SHOW NEW SECTION */
-
   sections[current].classList.add('active');
-
-  /* ACTIVE NAV BUTTON */
 
   const activeBtn =
     document.querySelector(
@@ -41,25 +31,16 @@ function goTo(index) {
     activeBtn.classList.add('active-btn');
   }
 
-  /* RESET SCROLL */
-
   sections[current].scrollTop = 0;
 
   setTimeout(() => {
     isAnimating = false;
-  }, 600);
+  }, 650);
 }
 
-/* INITIAL SECTION */
+/* INITIAL */
 
 sections[0].classList.add('active');
-
-const firstBtn =
-  document.querySelector('.home-nav-btn[href="#home"]');
-
-if (firstBtn) {
-  firstBtn.classList.add('active-btn');
-}
 
 /* NAV BUTTONS */
 
@@ -93,7 +74,7 @@ document.querySelectorAll('.back-btn').forEach(btn => {
 
 });
 
-/* CERTIFICATE MODAL */
+/* MODAL */
 
 const overlay = document.getElementById('modal-overlay');
 const modalImg = document.getElementById('modal-img');
@@ -113,8 +94,6 @@ function openCert(imgId) {
 function closeModal() {
   overlay.classList.remove('open');
 }
-
-/* ESC CLOSE */
 
 document.addEventListener('keydown', (e) => {
 
@@ -138,12 +117,13 @@ window.addEventListener('load', () => {
 
   anime({
     targets:
-      '.home-img-wrapper',
+      '.home-greeting, .home-title, .home-img-wrapper, .home-nav',
 
     opacity: [0, 1],
     translateY: [20, 0],
 
-    delay: 300,
+    delay:
+      anime.stagger(120, { start: 300 }),
 
     duration: 700,
     easing: 'easeOutExpo',

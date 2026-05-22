@@ -30,22 +30,6 @@ body {
   font-family: var(--font-body);
 }
 
-/* TOP NAVBAR */
-
-.top-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 1.2rem 2rem;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  z-index: 999;
-  background: rgba(12,12,20,0.7);
-  backdrop-filter: blur(10px);
-}
-
 /* SECTION SYSTEM */
 
 .section {
@@ -54,7 +38,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
 
-  padding: 7rem clamp(1.5rem, 8vw, 8rem) 4rem;
+  padding: 4rem clamp(1.5rem, 8vw, 8rem) 6rem;
 
   opacity: 0;
   visibility: hidden;
@@ -107,18 +91,29 @@ body {
   z-index: 2;
 }
 
+.home-greeting {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
 .home-name {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 7vw, 5rem);
   line-height: 1.1;
-  margin-bottom: 2rem;
+  margin: 0.5rem 0;
+}
+
+.home-title {
+  color: var(--accent);
+  margin-bottom: 1rem;
 }
 
 .home-img-wrapper {
   position: relative;
   width: 170px;
   height: 170px;
-  margin: 0 auto;
+  margin: 1.5rem auto;
 }
 
 .home-img {
@@ -145,7 +140,15 @@ body {
   }
 }
 
-/* NAV BUTTONS */
+/* NAV */
+
+.home-nav {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
 
 .home-nav-btn,
 .back-btn {
@@ -206,7 +209,6 @@ body {
 .about-text p {
   color: var(--muted);
   margin-bottom: 1.2rem;
-  line-height: 1.9;
 }
 
 .about-card {
@@ -376,7 +378,6 @@ body {
   color: #0a66c2;
   border-color: #0a66c2;
 }
-
 .contact-btn.linkedin:hover {
   background: #0a66c2;
   color: #fff;
@@ -386,7 +387,6 @@ body {
   color: var(--text);
   border-color: var(--border);
 }
-
 .contact-btn.github:hover {
   background: var(--text);
   color: var(--bg);
@@ -396,7 +396,6 @@ body {
   color: var(--accent);
   border-color: rgba(232,201,122,0.4);
 }
-
 .contact-btn.email:hover {
   background: var(--accent);
   color: #0c0c14;
@@ -430,7 +429,6 @@ body {
 .modal-box {
   max-width: 90vw;
   max-height: 90vh;
-  position: relative;
 }
 
 .modal-img {
@@ -441,8 +439,8 @@ body {
 .modal-close {
   position: absolute;
 
-  top: -10px;
-  right: -10px;
+  top: 1rem;
+  right: 1rem;
 
   width: 36px;
   height: 36px;
@@ -455,18 +453,29 @@ body {
   cursor: pointer;
 }
 
+/* FOOTER */
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 1rem;
+
+  text-align: center;
+
+  font-size: 0.8rem;
+  color: var(--muted);
+
+  background: rgba(12,12,20,0.95);
+
+  z-index: 100;
+}
+
 /* MOBILE */
 
 @media (max-width: 768px) {
-
-  html,
-  body {
-    overflow: auto;
-  }
-
-  .section {
-    padding: 7rem 1.5rem 4rem;
-  }
 
   .about-grid {
     grid-template-columns: 1fr;
@@ -477,15 +486,13 @@ body {
     justify-content: space-around;
   }
 
-  .top-nav {
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    padding: 1rem;
+  .home-nav {
+    flex-direction: column;
+    align-items: center;
   }
 
   .home-nav-btn {
-    font-size: 0.85rem;
-    padding: 0.6rem 1rem;
+    width: 220px;
   }
 
   .home-bg-blob {
@@ -498,15 +505,6 @@ body {
 
   .contact-btn {
     justify-content: center;
-  }
-
-  .home-name {
-    font-size: 2.2rem;
-  }
-
-  .home-img-wrapper {
-    width: 140px;
-    height: 140px;
   }
 
 }
